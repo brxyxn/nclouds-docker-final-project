@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -13,8 +12,8 @@ import (
 	"time"
 
 	u "github.com/brxyxn/go_gpr_nclouds/utils"
-	"github.com/go-openapi/runtime/middleware"
 	"github.com/gorilla/mux"
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 type App struct {
@@ -29,8 +28,8 @@ func main() {
 
 	a := App{}
 
-	u.InitLogs("go-mps-api ")
-	a.l = log.New(os.Stdout, "go-mps-api ", log.LstdFlags)
+	u.InitLogs("go-gpr-api ")
+	a.l = log.New(os.Stdout, "go-gpr-api ", log.LstdFlags)
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -43,17 +42,17 @@ func main() {
 	host := ""
 	env := os.Getenv("ENV")
 	if env == "Production" {
-		host = os.Getenv("DB_HOST")
+		host = os.Getenv("PG_HOST")
 	} else if env == "Development" {
-		host = u.DotEnvGet("DB_HOST")
+		host = u.DotEnvGet("PG_HOST")
 	}
 
 	a.Initialize(
 		host,
-		u.DotEnvGet("DB_PORT"),
-		u.DotEnvGet("DB_USER"),
-		u.DotEnvGet("DB_PASSWORD"),
-		u.DotEnvGet("DB_NAME"),
+		u.DotEnvGet("PG_PORT"),
+		u.DotEnvGet("PG_USER"),
+		u.DotEnvGet("PG_PASSWORD"),
+		u.DotEnvGet("PG_NAME"),
 	)
 
 	a.Run()
@@ -61,16 +60,16 @@ func main() {
 
 func (a *App) initRoutes() {
 	// h := handlers.NewHandlers(a.db, a.l)
-	// Client routes
+	// // Client routes
 
-	// Serving Documentation Web Server
-	// host:port/docs
-	opts := middleware.RedocOpts{SpecURL: "/docs/swagger.yaml"}
+	// // Serving Documentation Web Server
+	// // host:port/docs
+	// opts := middleware.RedocOpts{SpecURL: "/docs/swagger.yaml"}
 
-	sh := middleware.Redoc(opts, nil)
+	// sh := middleware.Redoc(opts, nil)
 
-	a.Router.Handle("/docs/swagger.yaml", http.FileServer(http.Dir("./")))
-	a.Router.Handle("/docs", sh)
+	// a.Router.Handle("/docs/swagger.yaml", http.FileServer(http.Dir("./")))
+	// a.Router.Handle("/docs", sh)
 }
 
 /*
@@ -103,18 +102,18 @@ func (a *App) Initialize(host, port, user, password, dbname string) {
 		a.db.Close()
 		a.l.Fatal(err)
 	} else {
-		u.LogInfo("(Optional)", "Creating and seeding tables to initializate DB.")
+		// u.LogInfo("(Optional)", "Creating and seeding tables to initializate DB.")
 
 		// Executing SQL statements to create tables and seed DB.
-		sqlDir := "db/docker_postgres_init.sql"
-		query, err := ioutil.ReadFile(sqlDir)
-		if err != nil {
-			u.LogError(fmt.Sprintf("Error while reading %s file.", sqlDir), err)
-		}
+		// sqlDir := "db/setup.sql"
+		// query, err := ioutil.ReadFile(sqlDir)
+		// if err != nil {
+		// 	u.LogError(fmt.Sprintf("Error while reading %s file.", sqlDir), err)
+		// }
 
-		if _, err := a.db.Exec(string(query)); err != nil {
-			a.l.Panic("Unable to run SQL statements.", err)
-		}
+		// if _, err := a.db.Exec(string(query)); err != nil {
+		// 	a.l.Panic("Unable to run SQL statements.", err)
+		// }
 	}
 }
 
