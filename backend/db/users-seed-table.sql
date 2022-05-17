@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+
+-- changeset xyx:users-seed-table
 INSERT INTO users(name, email, password) VALUES ('My Name 1', 'user@example.com', 'mypassword');
 INSERT INTO users(name, email, password) VALUES ('My Name 2', 'user@example.com', 'mypassword');
 INSERT INTO users(name, email, password) VALUES ('My Name 3', 'user@example.com', 'mypassword');
