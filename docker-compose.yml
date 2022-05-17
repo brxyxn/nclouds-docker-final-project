@@ -1,0 +1,72 @@
+version: "1.0.0"
+services:
+  api:
+    image: golang:1.18.2-alpine3.15
+    container_name: nclouds-backend
+    restart: on-failure
+    
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    volumes:
+      - backend_api:/usr/src/app
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - backend
+      - fullstack
+
+  frontend:
+    image: node
+    container_name: nclouds-frontend
+    ports:
+      - 5000:3000
+    depends_on:
+      - api
+    networks:
+      - fullstack
+
+  postgres:
+    image: postgres:14.2
+    container_name: nclouds-postgres
+    restart: on-failure
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=/run/secrets/pg_secret
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=${DB_HOST}
+    ports:
+      - "3001:5432"
+    volumes:
+      - database_postgres:/var/lib/postgresql/data
+    networks:
+      - networkName
+    secrets:
+      - pg_secret
+
+  redis:
+    image: redis:7.0.0
+    container_name: nclouds-redis
+    restart: on-failure
+    ports:
+      - "3002:6379"
+    volumes:
+      - cache_redis:/data
+
+volumes:
+  backend_api:
+  frontend:
+  database_postgres:
+  cache_redis:
+
+networks:
+  fullstack:
+    driver: bridge
+  backend:
+    driver: bridge
+
+secrets:
+  pg_secret:
+    file: ./pg_secret.txt
