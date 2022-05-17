@@ -49,3 +49,10 @@ thumb
 sketch
 
 # End of https://www.toptal.com/developers/gitignore/api/react,go,dotenv
+
+### docker ###
+data
+pg
+redis
+pg_data
+redis_data
