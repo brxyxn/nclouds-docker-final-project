@@ -4,7 +4,6 @@ services:
     image: golang:1.18.2-alpine3.15
     container_name: nclouds-backend
     restart: on-failure
-    
     expose:
       - 3000
     ports:
@@ -33,16 +32,16 @@ services:
     container_name: nclouds-postgres
     restart: on-failure
     environment:
-      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_USER=${PG_USER}
       - POSTGRES_PASSWORD=/run/secrets/pg_secret
-      - POSTGRES_DB=${DB_NAME}
-      - DATABASE_HOST=${DB_HOST}
+      - POSTGRES_DB=${PG_NAME}
+      - DATABASE_HOST=${PG_HOST}
     ports:
       - "3001:5432"
     volumes:
       - database_postgres:/var/lib/postgresql/data
     networks:
-      - networkName
+      - backend
     secrets:
       - pg_secret
 
@@ -50,6 +49,8 @@ services:
     image: redis:7.0.0
     container_name: nclouds-redis
     restart: on-failure
+    expose:
+      - 6379
     ports:
       - "3002:6379"
     volumes:

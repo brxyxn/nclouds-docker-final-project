@@ -56,3 +56,4 @@ pg
 redis
 pg_data
 redis_data
+**/*secret*

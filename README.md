@@ -28,3 +28,12 @@ Optionally you can validate sql with:
 ```sh
 liquibase --defaultsFile=liquibase.properties --changeLogFile=changelog.xml update
 ```
+
+## Secrets
+
+Include //pending
+
+`pg_secrets.txt`
+```
+<<password>>
+```

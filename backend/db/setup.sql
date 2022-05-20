@@ -1,4 +1,4 @@
-
-CREATE DATABASE nclouds_db;
-CREATE USER nclouds_user WITH PASSWORD 'nclouds_password';
-GRANT ALL PRIVILEGES ON DATABASE nclouds_db to nclouds_user;
+-- CREATE DATABASE nclouds_db;
+/**/;
+CREATE USER backenduser WITH PASSWORD 'backendpassword';
+GRANT ALL ON DATABASE nclouds_db TO backenduser;
