@@ -27,12 +27,13 @@ psql:
 	docker exec -it nclouds-postgres psql -U nclouds_user nclouds_db
 
 # Docker
-build:
+docker-build:
+	docker-compose build
 
-start:
+docker-start:
 	docker-compose start
 
-stop:
+docker-stop:
 	docker-compose stop
 
 docker-build-database:
