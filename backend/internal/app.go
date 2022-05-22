@@ -10,6 +10,7 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/brxyxn/go_gpr_nclouds/backend/internal/handlers"
 	u "github.com/brxyxn/go_gpr_nclouds/backend/utils"
 	"github.com/gorilla/mux"
 	_ "github.com/jackc/pgx/v4/stdlib"
@@ -23,19 +24,10 @@ type App struct {
 }
 
 func (a *App) initRoutes() {
-	// h := handlers.NewHandlers(a.db, a.l)
-	// // Client routes
-
-	// // Serving Documentation Web Server
-	// // host:port/docs
-	// opts := middleware.RedocOpts{SpecURL: "/docs/swagger.yaml"}
-
-	// sh := middleware.Redoc(opts, nil)
-
-	// a.Router.Handle("/docs/swagger.yaml", http.FileServer(http.Dir("./")))
-	// a.Router.Handle("/docs", sh)
-
-	// a.Router.(":5000", nil)
+	h := handlers.NewHandlers(a.DB)
+	// User routes
+	a.Router.HandleFunc("/api/v1/users", h.CreateUser).Methods("POST")
+	a.Router.HandleFunc("/api/v1/users", h.GetUsers).Methods("GET")
 }
 
 /*
