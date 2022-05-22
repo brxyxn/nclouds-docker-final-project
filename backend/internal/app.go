@@ -64,9 +64,9 @@ func (a *App) Initialize(host, port, user, password, dbname string) {
 	err = a.DB.Ping()
 	if err != nil {
 		a.DB.Close()
-		u.Log.P.Fatal(err)
+		u.Log.Error(err)
 	}
-	u.Log.Debug("Connected to database " + dbname)
+	u.Log.Debug("Connected to database", dbname, "with user", user, "at", host+":"+port)
 }
 
 /*
