@@ -34,6 +34,9 @@ func (a *App) initRoutes() {
 
 	// a.Router.Handle("/docs/swagger.yaml", http.FileServer(http.Dir("./")))
 	// a.Router.Handle("/docs", sh)
+
+	
+	// a.Router.(":5000", nil)
 }
 
 /*
@@ -52,7 +55,6 @@ func (a *App) Initialize(host, port, user, password, dbname string) {
 	var err error
 	a.DB, err = sql.Open("pgx", connectionStr)
 	if err != nil {
-
 		u.LogInfo("Error opening a new connection to the DB.", err)
 	}
 
@@ -65,20 +67,8 @@ func (a *App) Initialize(host, port, user, password, dbname string) {
 	if err != nil {
 		a.DB.Close()
 		a.L.Fatal(err)
-	} else {
-		// u.LogInfo("(Optional)", "Creating and seeding tables to initializate DB.")
-
-		// Executing SQL statements to create tables and seed DB.
-		// sqlDir := "db/setup.sql"
-		// query, err := ioutil.ReadFile(sqlDir)
-		// if err != nil {
-		// 	u.LogError(fmt.Sprintf("Error while reading %s file.", sqlDir), err)
-		// }
-
-		// if _, err := a.db.Exec(string(query)); err != nil {
-		// 	a.l.Panic("Unable to run SQL statements.", err)
-		// }
 	}
+	a.L.Println("Connected to database " + dbname)
 }
 
 /*
