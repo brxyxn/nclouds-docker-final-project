@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 
 	a "github.com/brxyxn/go_gpr_nclouds/backend/internal"
 	u "github.com/brxyxn/go_gpr_nclouds/backend/utils"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -14,9 +14,9 @@ func main() {
 
 	a.L = u.InitLogs("nclouds-api ")
 
+	// Get port if exists
 	port := os.Getenv("PORT")
-	port = fmt.Sprintf("%q", port)
-	if port != "" && port != "\"\"" {
+	if port != "" {
 		a.BindAddr = ":" + port
 	}
 
@@ -26,43 +26,43 @@ func main() {
 	var cache_name int
 	var err error
 	env := os.Getenv("ENV")
-	if env == "Production" {
-		// Sql
-		db_host = os.Getenv("DB_HOST")
-		db_port = os.Getenv("DB_PORT")
-		db_user = os.Getenv("DB_USER")
-		db_name = os.Getenv("DB_NAME")
-		db_password = os.Getenv("DB_PASSWORD")
-
-		// Cache
-		cache_host = os.Getenv("RDB_HOST")
-		cache_port = os.Getenv("RDB_PORT")
-		cache_password = os.Getenv("RDB_PASSWORD")
-		cache_name, err = strconv.Atoi(os.Getenv("RDB_NAME"))
+	if env != "Production" {
+		err := godotenv.Load()
 		if err != nil {
-			u.Log.Error("Error converting env RDB_NAME to int.", err)
-		}
-	} else {
-		// Sql
-		db_host = u.DotEnvGet("DB_HOST")
-		db_port = u.DotEnvGet("DB_PORT")
-		db_user = u.DotEnvGet("DB_USER")
-		db_name = u.DotEnvGet("DB_NAME")
-		db_password = u.DotEnvGet("DB_PASSWORD")
-
-		// Cache
-		cache_host = os.Getenv("RDB_HOST")
-		cache_port = os.Getenv("RDB_PORT")
-		cache_password = os.Getenv("RDB_PASSWORD")
-		cache_name, err = strconv.Atoi(os.Getenv("RDB_NAME"))
-		if err != nil {
-			u.Log.Error("Error converting env RDB_NAME to int.", err)
+			u.Log.Error("Error loading .env file.", err)
+			return
 		}
 
-		a.BindAddr = ":" + u.DotEnvGet("PORT")
+		a.BindAddr = ":" + os.Getenv("PORT")
+	}
+	// Sql
+	db_host = os.Getenv("DB_HOST")
+	db_port = os.Getenv("DB_PORT")
+	db_user = os.Getenv("DB_USER")
+	db_name = os.Getenv("DB_NAME")
+	db_password = os.Getenv("DB_PASSWORD")
+
+	// Cache
+	cache_host = os.Getenv("RDB_HOST")
+	cache_port = os.Getenv("RDB_PORT")
+	cache_password = os.Getenv("RDB_PASSWORD")
+	cache_name, err = strconv.Atoi(os.Getenv("RDB_NAME"))
+	if err != nil {
+		u.Log.Error("Error converting env RDB_NAME to int.", err)
 	}
 
-	if db_port == "" || db_host == "" || db_user == "" || db_name == "" || db_password == "" || a.BindAddr == "" {
+	u.Log.Debug("DB Variables:", db_host, db_port, db_user, db_name, db_password)
+	u.Log.Debug("Cache Variables:", cache_host, cache_port, cache_name, cache_password)
+
+	if db_port == "" ||
+		db_host == "" ||
+		db_user == "" ||
+		db_name == "" ||
+		db_password == "" ||
+		a.BindAddr == "" ||
+		cache_host == "" ||
+		cache_port == "" ||
+		cache_name < 0 {
 		u.Log.Error("Environment variables weren't loaded correctly!")
 		return
 	}

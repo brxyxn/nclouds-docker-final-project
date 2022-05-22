@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handlers) CreateUser(w http.ResponseWriter, r *http.Request) {
-	u.Log.Info("Handling POST Users /users")
+	u.Log.Info("Handling POST Users /sql/users")
 
 	var values *data.User
 	var counter data.Counter
@@ -27,6 +27,7 @@ func (h *Handlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 	if values.Username == "" || values.Email == "" || values.Password == "" {
 		u.Log.Error("CreateUser handler:", u.Consts.RequiredParams)
 		u.Respond.Error(w, http.StatusBadRequest, u.Consts.RequiredParams)
+		return
 	}
 
 	if err := data.CreateUser(h.db, values, &counter); err != nil {
@@ -43,8 +44,8 @@ func (h *Handlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 	u.Respond.JSON(w, http.StatusCreated, counter)
 }
 
-func (h *Handlers) GetUsers(w http.ResponseWriter, r *http.Request) {
-	u.Log.Info("Handling GET Users /users")
+func (h *Handlers) GetCounter(w http.ResponseWriter, r *http.Request) {
+	u.Log.Info("Handling GET Users /sql/users")
 
 	var counter data.Counter
 	if err := data.CountUsers(h.db, &counter); err != nil {
@@ -54,6 +55,7 @@ func (h *Handlers) GetUsers(w http.ResponseWriter, r *http.Request) {
 		default:
 			u.Respond.Error(w, http.StatusInternalServerError, err.Error())
 		}
+		u.Log.Error("GetCounter handler:", err)
 		return
 	}
 

@@ -5,8 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 /*
@@ -45,21 +43,9 @@ func (lg *logging) Debug(x ...interface{}) {
 	l.p.Println(args...)
 }
 
-/*
-This function loads the .env file and returns the value of the env variable
-*/
-func DotEnvGet(key string) string {
-	err := godotenv.Load()
-	if err != nil {
-		l.Error("Error loading .env file.", err)
-	}
-
-	return os.Getenv(key)
-}
-
-
 /* HTTP Responders */
 type response struct{}
+
 var Respond response
 
 /*

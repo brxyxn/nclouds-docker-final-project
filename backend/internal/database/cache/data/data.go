@@ -24,7 +24,6 @@ func CreateUser(rdb *redis.Client, ctx context.Context, user *User) error {
 
 	key = user.Username + "-" + user.Email
 	value = user.Password
-	u.Log.Debug(key, value)
 
 	err = rdb.Set(ctx, key, value, 0).Err()
 	if err != nil {
@@ -32,7 +31,7 @@ func CreateUser(rdb *redis.Client, ctx context.Context, user *User) error {
 		return err
 	}
 
-	val, err := rdb.Get(ctx, key).Result()
+	_, err = rdb.Get(ctx, key).Result()
 	if err == redis.Nil {
 		u.Log.Error(key, u.Consts.KeyNotExist)
 		return err
@@ -41,7 +40,6 @@ func CreateUser(rdb *redis.Client, ctx context.Context, user *User) error {
 		u.Log.Error(err)
 		return err
 	}
-	u.Log.Debug("Value stored", key, val)
 
 	return nil
 }
@@ -54,7 +52,6 @@ func CountUsers(rdb *redis.Client, ctx context.Context, counter *Counter) error 
 	}
 
 	counter.Value = int(count.Val())
-	u.Log.Debug(count.Val())
 
 	return nil
 }

@@ -8,7 +8,7 @@ import (
 	u "github.com/brxyxn/go_gpr_nclouds/backend/utils"
 )
 
-func (h Handlers) CreateUser(w http.ResponseWriter, r *http.Request) {
+func (h *Handlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 	u.Log.Info("Handling POST Users /cache/users")
 
 	var user data.User
@@ -41,4 +41,17 @@ func (h Handlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	u.Respond.JSON(w, http.StatusCreated, count)
+}
+
+func (h *Handlers) GetCounter(w http.ResponseWriter, r *http.Request){
+	u.Log.Info("Handling GET Users /cache/users")
+
+	var counter data.Counter
+	if err := data.CountUsers(h.client, ctx, &counter); err != nil{
+		u.Respond.Error(w, http.StatusInternalServerError, err.Error())
+		u.Log.Error("GetCounter handler:", err)
+		return
+	}
+	
+	u.Respond.JSON(w, http.StatusOK, counter)
 }
