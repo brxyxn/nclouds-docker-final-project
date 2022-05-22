@@ -5,9 +5,9 @@ services:
     container_name: nclouds-backend
     restart: on-failure
     expose:
-      - 3000
+      - 5000
     ports:
-      - 3000:3000
+      - 5000:5000
     volumes:
       - backend_api:/usr/src/app
     depends_on:
@@ -20,8 +20,10 @@ services:
   frontend:
     image: node
     container_name: nclouds-frontend
+    expose:
+      - 3000
     ports:
-      - 5000:3000
+      - 3000:3000
     depends_on:
       - api
     networks:
@@ -37,7 +39,7 @@ services:
       - POSTGRES_DB=${PG_NAME}
       - DATABASE_HOST=${PG_HOST}
     ports:
-      - "3001:5432"
+      - "${PG_PORT}:5432"
     volumes:
       - database_postgres:/var/lib/postgresql/data
     networks:
@@ -52,7 +54,7 @@ services:
     expose:
       - 6379
     ports:
-      - "3002:6379"
+      - "${RDB_PORT}:6379"
     volumes:
       - cache_redis:/data
     networks:
