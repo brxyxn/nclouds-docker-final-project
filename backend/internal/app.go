@@ -35,7 +35,7 @@ To initialize the routes and database connection you must
 include the following information as strings and also
 call Run setting the port to serve to the web.
 */
-func (a *App) Initialize(host, port, user, password, dbname string) {
+func (a *App) InitializePostgresql(host, port, user, password, dbname string) {
 	connectionStr := fmt.Sprintf(
 		"host=%s port=%v user=%s "+
 			"password=%s dbname=%s sslmode=disable",

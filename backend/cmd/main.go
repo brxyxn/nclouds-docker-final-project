@@ -42,7 +42,8 @@ func main() {
 		return
 	}
 
-	a.Initialize(
+	// Sql
+	a.InitializePostgresql(
 		db_host,
 		db_port,
 		db_user,
