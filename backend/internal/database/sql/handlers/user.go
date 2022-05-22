@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/brxyxn/go_gpr_nclouds/backend/internal/sql/data"
+	"github.com/brxyxn/go_gpr_nclouds/backend/internal/database/sql/data"
 	u "github.com/brxyxn/go_gpr_nclouds/backend/utils"
 )
 

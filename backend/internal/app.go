@@ -10,8 +10,10 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/brxyxn/go_gpr_nclouds/backend/internal/sql/handlers"
+	rs "github.com/brxyxn/go_gpr_nclouds/backend/internal/database/cache/handlers"
+	pg "github.com/brxyxn/go_gpr_nclouds/backend/internal/database/sql/handlers"
 	u "github.com/brxyxn/go_gpr_nclouds/backend/utils"
+	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
@@ -19,15 +21,21 @@ import (
 type App struct {
 	Router   *mux.Router
 	DB       *sql.DB
+	Cache    *redis.Client
+	Ctx      context.Context
 	L        *log.Logger
 	BindAddr string
 }
 
 func (a *App) initRoutes() {
-	h := handlers.NewHandlers(a.DB)
-	// User routes
-	a.Router.HandleFunc("/api/v1/users", h.CreateUser).Methods("POST")
-	a.Router.HandleFunc("/api/v1/users", h.GetUsers).Methods("GET")
+	a.Router = mux.NewRouter() // Make sure this is set before the server is started
+	// SQL Routes
+	sqlHandler := pg.NewHandlers(a.DB)
+	a.Router.HandleFunc("/api/v1/sql/users", sqlHandler.CreateUser).Methods("POST")
+
+	// Cache Routes
+	cacheHandler := rs.NewHandlers(a.Cache)
+	a.Router.HandleFunc("/api/v1/cache/users", cacheHandler.CreateUser).Methods("POST")
 }
 
 /*
@@ -45,10 +53,9 @@ func (a *App) InitializePostgresql(host, port, user, password, dbname string) {
 	var err error
 	a.DB, err = sql.Open("pgx", connectionStr)
 	if err != nil {
-		u.Log.Info("Error opening a new connection to the DB.", err)
+		u.Log.Error("Error opening a new connection to the DB.", err)
+		return
 	}
-
-	a.Router = mux.NewRouter() // Make sure this is set before the server is started
 
 	// We try to validate the connection to the DB is correct, otherwise, the app
 	// will restart itself, this is a temporary solution because the postgres image usually
@@ -57,8 +64,25 @@ func (a *App) InitializePostgresql(host, port, user, password, dbname string) {
 	if err != nil {
 		a.DB.Close()
 		u.Log.Error(err)
+		return
 	}
-	u.Log.Debug("Connected to database", dbname, "with user", user, "at", host+":"+port)
+	u.Log.Info("Connected to database", dbname, "with user", user, "at", host+":"+port)
+}
+
+func (a *App) InitializeCache(bindAddr, password string, dbname int) {
+	a.Ctx = context.Background()
+	a.Cache = redis.NewClient(&redis.Options{
+		Addr:     bindAddr,
+		Password: password,
+		DB:       dbname,
+	})
+
+	ping := a.Cache.Ping(a.Ctx)
+	if ping.Val() != "PONG" {
+		u.Log.Error("Error opening a new connection to the Redis Cache.")
+		return
+	}
+	u.Log.Info("Connected to redis cache db", dbname, "at", bindAddr)
 }
 
 /*
