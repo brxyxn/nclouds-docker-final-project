@@ -18,7 +18,7 @@ func (h *Handlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&values); err != nil {
 		u.Log.Error("CreateUser handler:", err)
-		u.Respond.Error(w, http.StatusBadRequest, "Invalid request payload.")
+		u.Respond.Error(w, http.StatusBadRequest, u.Consts.InvalidPayload)
 		return
 	}
 
