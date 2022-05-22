@@ -22,6 +22,15 @@ psql:
 	docker exec -it nclouds-postgres psql -U nclouds_user nclouds_db
 
 # Docker
+docker-tag:
+	docker build -t go-nclouds-app:latest .
+
+docker-run:
+	docker run -p 5000:5000 --name nclouds-backend-api --rm -it go-nclouds-app:latest
+
+docker-run-env:
+	docker run -p 5000:5000 --name nclouds-backend-api --rm -it --env-file .env --network hw4_backend go-nclouds-app:latest
+
 docker-build:
 	docker-compose build
 
