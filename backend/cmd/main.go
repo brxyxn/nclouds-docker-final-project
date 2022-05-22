@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	b "github.com/brxyxn/go_gpr_nclouds/backend/internal"
@@ -12,14 +11,11 @@ import (
 func main() {
 	a := b.App{}
 
-	u.InitLogs("go-gpr-api ")
-	a.L = log.New(os.Stdout, "go-gpr-api ", log.LstdFlags)
+	a.L = u.InitLogs("nclouds-api ")
 
 	port := os.Getenv("PORT")
 	port = fmt.Sprintf("%q", port)
-	if port == "" || port == "\"\"" {
-		a.BindAddr = ":" + "3000"
-	} else {
+	if port != "" && port != "\"\"" {
 		a.BindAddr = ":" + port
 	}
 
@@ -37,6 +33,13 @@ func main() {
 		db_user = u.DotEnvGet("DB_USER")
 		db_name = u.DotEnvGet("DB_NAME")
 		db_password = u.DotEnvGet("DB_PASSWORD")
+
+		a.BindAddr = ":" + u.DotEnvGet("PORT")
+	}
+
+	if db_port == "" || db_host == "" || db_user == "" || db_name == "" || db_password == "" || a.BindAddr == "" {
+		u.Log.Error("Environment variables were not loaded correctly!")
+		return
 	}
 
 	a.Initialize(

@@ -44,7 +44,6 @@ include the following information as strings and also
 call Run setting the port to serve to the web.
 */
 func (a *App) Initialize(host, port, user, password, dbname string) {
-	// connectionStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", user, password, host, port, dbname)
 	connectionStr := fmt.Sprintf(
 		"host=%s port=%v user=%s "+
 			"password=%s dbname=%s sslmode=disable",
@@ -54,7 +53,7 @@ func (a *App) Initialize(host, port, user, password, dbname string) {
 	var err error
 	a.DB, err = sql.Open("pgx", connectionStr)
 	if err != nil {
-		u.LogInfo("Error opening a new connection to the DB.", err)
+		u.Log.Info("Error opening a new connection to the DB.", err)
 	}
 
 	a.Router = mux.NewRouter() // Make sure this is set before the server is started
@@ -65,9 +64,9 @@ func (a *App) Initialize(host, port, user, password, dbname string) {
 	err = a.DB.Ping()
 	if err != nil {
 		a.DB.Close()
-		a.L.Fatal(err)
+		u.Log.P.Fatal(err)
 	}
-	a.L.Println("Connected to database " + dbname)
+	u.Log.Debug("Connected to database " + dbname)
 }
 
 /*
@@ -89,11 +88,11 @@ func (a *App) Run() {
 
 	// Starting the server
 	go func() {
-		u.LogInfo("Running server on port", a.BindAddr)
+		u.Log.Info("Running server on port", a.BindAddr)
 
 		err := srv.ListenAndServe()
 		if err != nil {
-			a.L.Printf("Server Status: %s\n", err)
+			u.Log.Info("Server Status: ", err)
 			os.Exit(1)
 		}
 	}()
@@ -105,7 +104,7 @@ func (a *App) Run() {
 	// signal.Notify(sigchan, os.Kill) // If running on Windows
 
 	sigchan := <-cs
-	u.LogDebug("Signal received:", sigchan)
+	u.Log.Debug("Signal received:", sigchan)
 
 	ctx, fn := context.WithTimeout(context.Background(), 30*time.Second)
 	defer fn()
