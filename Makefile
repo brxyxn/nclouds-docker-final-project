@@ -30,6 +30,9 @@ psql:
 docker-build:
 	docker-compose build
 
+docker-up:
+	docker-compose up --build
+
 docker-start:
 	docker-compose start
 
@@ -42,4 +45,9 @@ docker-build-database:
 docker-build-cache:
 	docker build -t redis-dkf:test -f ./database/Redis.Dockerfile .
 
+docker-exec-psql:
+	docker exec -it nclouds-postgres psql -U nclouds_user nclouds_db
+
+docker-exec-bash:
+	docker exec -it nclouds-postgres bash
 # Frontend
