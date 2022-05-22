@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	b "github.com/brxyxn/go_gpr_nclouds/backend"
+	b "github.com/brxyxn/go_gpr_nclouds/backend/internal"
 	u "github.com/brxyxn/go_gpr_nclouds/backend/utils"
 )
 
@@ -31,7 +31,7 @@ func main() {
 		db_user = os.Getenv("DB_USER")
 		db_name = os.Getenv("DB_NAME")
 		db_password = os.Getenv("DB_PASSWORD")
-	} else if env == "Development" {
+	} else {
 		db_host = u.DotEnvGet("DB_HOST")
 		db_port = u.DotEnvGet("DB_PORT")
 		db_user = u.DotEnvGet("DB_USER")

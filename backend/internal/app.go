@@ -1,4 +1,4 @@
-package backend
+package internal
 
 import (
 	"context"
@@ -35,7 +35,6 @@ func (a *App) initRoutes() {
 	// a.Router.Handle("/docs/swagger.yaml", http.FileServer(http.Dir("./")))
 	// a.Router.Handle("/docs", sh)
 
-	
 	// a.Router.(":5000", nil)
 }
 
