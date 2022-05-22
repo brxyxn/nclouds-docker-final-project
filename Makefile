@@ -12,16 +12,11 @@ env_prod:
 	export ENV=Production
 
 # Database
-move_fwd:
-	cd backend/db
-move_bwd:
-	cd ../..
-
 db_validate:
-	cd backend/db && liquibase --defaults-file=liquibase.properties validate && cd ../..
+	cd backend/migrations && liquibase --defaults-file=liquibase.properties validate && cd ../..
 
 db_migrate:
-	cd backend/db && liquibase --defaults-file=liquibase.properties update && cd ../..
+	cd backend/migrations && liquibase --defaults-file=liquibase.properties update && cd ../..
 
 psql:
 	docker exec -it nclouds-postgres psql -U nclouds_user nclouds_db
