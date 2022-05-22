@@ -2,8 +2,6 @@ package data
 
 import (
 	"database/sql"
-
-	u "github.com/brxyxn/go_gpr_nclouds/backend/utils"
 )
 
 type User struct {
@@ -32,7 +30,6 @@ func CreateUser(db *sql.DB, v *User, c *Counter) error {
 }
 
 func CountUsers(db *sql.DB, c *Counter) error {
-	u.Log.Debug("Handling CountUsers")
 	return db.QueryRow(
 		"SELECT COUNT(*) FROM users;",
 	).Scan(&c.Value)

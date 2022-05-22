@@ -10,7 +10,7 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/brxyxn/go_gpr_nclouds/backend/internal/handlers"
+	"github.com/brxyxn/go_gpr_nclouds/backend/internal/sql/handlers"
 	u "github.com/brxyxn/go_gpr_nclouds/backend/utils"
 	"github.com/gorilla/mux"
 	_ "github.com/jackc/pgx/v4/stdlib"
