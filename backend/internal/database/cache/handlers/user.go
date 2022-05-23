@@ -11,6 +11,8 @@ import (
 func (h *Handlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 	u.Log.Info("Handling POST Users /cache/users")
 
+	w.Header().Set("Content-Type", "application/json")
+
 	var user data.User
 	var count data.Counter
 
@@ -43,15 +45,17 @@ func (h *Handlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 	u.Respond.JSON(w, http.StatusCreated, count)
 }
 
-func (h *Handlers) GetCounter(w http.ResponseWriter, r *http.Request){
+func (h *Handlers) GetCounter(w http.ResponseWriter, r *http.Request) {
 	u.Log.Info("Handling GET Users /cache/users")
 
+	w.Header().Set("Content-Type", "application/json")
+
 	var counter data.Counter
-	if err := data.CountUsers(h.client, ctx, &counter); err != nil{
+	if err := data.CountUsers(h.client, ctx, &counter); err != nil {
 		u.Respond.Error(w, http.StatusInternalServerError, err.Error())
 		u.Log.Error("GetCounter handler:", err)
 		return
 	}
-	
+
 	u.Respond.JSON(w, http.StatusOK, counter)
 }

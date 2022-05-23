@@ -12,6 +12,8 @@ import (
 func (h *Handlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 	u.Log.Info("Handling POST Users /sql/users")
 
+	w.Header().Set("Content-Type", "application/json")
+
 	var values *data.User
 	var counter data.Counter
 
@@ -46,6 +48,8 @@ func (h *Handlers) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handlers) GetCounter(w http.ResponseWriter, r *http.Request) {
 	u.Log.Info("Handling GET Users /sql/users")
+
+	w.Header().Set("Content-Type", "application/json")
 
 	var counter data.Counter
 	if err := data.CountUsers(h.db, &counter); err != nil {

@@ -25,5 +25,6 @@ require (
 
 require (
 	github.com/jackc/pgx/v4 v4.16.1
+	github.com/rs/cors v1.8.2
 	golang.org/x/text v0.3.7 // indirect
 )

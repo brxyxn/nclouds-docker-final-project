@@ -13,6 +13,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/rs/cors"
 )
 
 type App struct {
@@ -22,6 +23,7 @@ type App struct {
 	Ctx      context.Context
 	L        *log.Logger
 	BindAddr string
+	handler  http.Handler
 }
 
 func (a *App) initRoutes() {
@@ -31,6 +33,9 @@ func (a *App) initRoutes() {
 
 	// Cache Routes
 	a.cacheRoutes()
+
+	handler := cors.Default().Handler(a.Router)
+	a.handler = handler
 }
 
 /*
@@ -43,7 +48,7 @@ func (a *App) Run() {
 	// Creating a new server
 	srv := http.Server{
 		Addr:         a.BindAddr,        // configure the bind address
-		Handler:      a.Router,          // set the default handler
+		Handler:      a.handler,         // set the default handler
 		ErrorLog:     a.L,               // set the logger for the server
 		ReadTimeout:  5 * time.Second,   // max time to read request from the client
 		WriteTimeout: 10 * time.Second,  // max time to write response to the client
@@ -73,4 +78,8 @@ func (a *App) Run() {
 	ctx, fn := context.WithTimeout(context.Background(), 30*time.Second)
 	defer fn()
 	srv.Shutdown(ctx)
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
