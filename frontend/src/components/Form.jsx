@@ -26,7 +26,7 @@ export default class MyForm extends React.Component {
     const response = await fetch(`${url}${path}`);
     const data = await response.json();
 
-    if (path == "/sql/users") {
+    if (path === "/sql/users") {
       this.setState({
         counter: { sql: data.counter, cache: this.state.counter.cache },
       });
@@ -51,7 +51,7 @@ export default class MyForm extends React.Component {
     });
     const data = await response.json();
 
-    if (path == "/sql/users") {
+    if (path === "/sql/users") {
       this.setState((prevState) => ({
         counter: {
           ...prevState.counter,
