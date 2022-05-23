@@ -57,18 +57,6 @@ redis
 redis_data
 **/*secret*
 
-# Common
-README.md
-CHANGELOG.md
-docker-compose.yml
-Dockerfile
-Dockerfile.prod
-
-# git
-.git
-.gitattributes
-.gitignore
-
 # Node
 ## Logs
 **/logs
