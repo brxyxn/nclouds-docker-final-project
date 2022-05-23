@@ -30,6 +30,8 @@ services:
 
   frontend:
     image: react-nclouds-app
+    build:
+      dockerfile: ./Frontend.Dockerfile
     container_name: nclouds-frontend
     ports:
       - 3000:80

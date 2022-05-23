@@ -21,6 +21,14 @@ Dockerfile.prod
 ## Dependency directories
 **/node_modules/
 
+**/build/
+npm-debug.log
+.dockerignore
+.gitignore
+**/.git
+**/.DS_Store
+**/node_modules
+
 # Golang
 **/*.exe
 **/*.exe~
@@ -34,3 +42,4 @@ Dockerfile.prod
 **/Godeps/
 **/bin/
 **/migrations/
+
