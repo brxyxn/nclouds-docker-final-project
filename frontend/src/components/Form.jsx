@@ -4,12 +4,6 @@ import { faUser, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import Counters from "./Counter";
 import PasswordField from "./PasswordField";
 
-function myClick(e) {
-  e.preventDefault();
-
-  console.log("clicked!");
-}
-
 export default class MyForm extends React.Component {
   constructor(props) {
     super(props);
