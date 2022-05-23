@@ -123,7 +123,7 @@ form#inputs>.group {
 
     font-size: 1rem;
     color: #ECEFF4;
-    background-color: #81A1C1;
+    background-color: #5f81a3;
     cursor: pointer;
 
     border: none;
@@ -133,8 +133,8 @@ form#inputs>.group {
     width: 100%;
 }
 
-.buttons>button:hover {
-    background-color: #4170a0;
+button:hover {
+    background-color: #558cc4!important;
 }
 
 /* --- Counters --- */
