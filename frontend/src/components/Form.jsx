@@ -22,34 +22,6 @@ export default class MyForm extends React.Component {
     };
   }
 
-  onUsernameChange(value) {
-    this.setState({
-      user: {
-        username: value,
-      },
-    });
-  }
-
-  onEmailChange(value) {
-    this.setState({
-      user: {
-        email: value,
-      },
-    });
-  }
-
-  onPasswordChange(value) {
-    this.setState({
-      user: {
-        password: value,
-      },
-    });
-  }
-
-  mySubmit(e) {
-    // e.preventDefault();
-  }
-
   async getCounter(url, path) {
     const response = await fetch(`${url}${path}`);
     const data = await response.json();
