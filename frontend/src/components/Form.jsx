@@ -86,14 +86,23 @@ export default class MyForm extends React.Component {
           sql: data.counter,
         },
       }));
-      return;
+    } else {
+      this.setState((prevState) => ({
+        counter: {
+          ...prevState.counter,
+          cache: data.counter,
+        },
+      }));
     }
-    this.setState((prevState) => ({
-      counter: {
-        ...prevState.counter,
-        cache: data.counter,
+
+    // clear fields
+    this.setState({
+      user: {
+        username: "",
+        email: "",
+        password: "",
       },
-    }));
+    });
   }
 
   async componentDidMount() {
@@ -124,6 +133,7 @@ export default class MyForm extends React.Component {
                   },
                 }))
               }
+              value={this.state.user.username}
             />
           </div>
           <div className="group">
@@ -141,6 +151,7 @@ export default class MyForm extends React.Component {
                   },
                 }))
               }
+              value={this.state.user.email}
             />
           </div>
           <PasswordField
@@ -152,6 +163,7 @@ export default class MyForm extends React.Component {
                 },
               }))
             }
+            value={this.state.user.password}
           />
 
           <div className="group buttons">

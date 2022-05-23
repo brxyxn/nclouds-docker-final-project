@@ -18,6 +18,7 @@ const PasswordField = (props) => {
           id="password"
           placeholder="Type your password"
           onChange={props.onChange}
+          value={props.value}
         />
       </div>
       <div className="group">
