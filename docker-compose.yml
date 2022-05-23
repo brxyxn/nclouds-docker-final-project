@@ -1,38 +1,38 @@
 version: "3.9"
 services:
-  # api:
-  #   image: go-nclouds-app
-  #   build: .
-  #   container_name: nclouds-backend
-  #   environment:
-  #     - PORT=${PORT}
-  #     - ENV=Production
-  #     - DB_HOST=${DC_DB_HOST}
-  #     - DB_PORT=${DC_DB_PORT}
-  #     - DB_USER=${DC_DB_USER}
-  #     - DB_NAME=${DC_DB_NAME}
-  #     - DB_PASSWORD=${DC_DB_PASSWORD}
+  api:
+    image: go-nclouds-app
+    build: .
+    container_name: nclouds-backend
+    environment:
+      - PORT=${PORT}
+      - ENV=Production
+      - DB_HOST=${DC_DB_HOST}
+      - DB_PORT=${DC_DB_PORT}
+      - DB_USER=${DC_DB_USER}
+      - DB_NAME=${DC_DB_NAME}
+      - DB_PASSWORD=${DC_DB_PASSWORD}
 
-  #     - RDB_HOST=${DC_RDB_HOST}
-  #     - RDB_PORT=${DC_RDB_PORT}
-  #     - RDB_NAME=${DC_RDB_NAME}
-  #     - RDB_PASSWORD=${DC_RDB_PASSWORD}
-  #   ports:
-  #     - ${PORT}:${PORT}
-  #   volumes:
-  #     - backend-api:/usr/src/app
-  #   depends_on:
-  #     - postgres
-  #     - redis
-  #   networks:
-  #     - backend
-  #     - fullstack
+      - RDB_HOST=${DC_RDB_HOST}
+      - RDB_PORT=${DC_RDB_PORT}
+      - RDB_NAME=${DC_RDB_NAME}
+      - RDB_PASSWORD=${DC_RDB_PASSWORD}
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - backend-api:/usr/src/app
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - backend
+      - fullstack
 
   frontend:
-    image: node
+    image: react-nclouds-app
     container_name: nclouds-frontend
     ports:
-      - 3000:3000
+      - 3000:80
     depends_on:
       - api
     networks:
@@ -67,6 +67,8 @@ services:
       - "${DC_PORT_RDS}:6379"
     volumes:
       - cache-redis:/data
+    depends_on:
+      - postgres
     networks:
       - backend
 
