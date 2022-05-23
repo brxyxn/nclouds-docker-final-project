@@ -4,6 +4,8 @@ import { faUser, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import Counters from "./Counter";
 import PasswordField from "./PasswordField";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 export default class MyForm extends React.Component {
   constructor(props) {
     super(props);
@@ -40,7 +42,7 @@ export default class MyForm extends React.Component {
   async setUser(e, path) {
     e.preventDefault();
 
-    const url = "http://localhost:5000/api/v1";
+    const url = `${apiUrl}`;
     const response = await fetch(`${url}${path}`, {
       method: "POST",
       body: JSON.stringify({
@@ -78,7 +80,7 @@ export default class MyForm extends React.Component {
   }
 
   async componentDidMount() {
-    const url = "http://localhost:5000/api/v1";
+    const url = `${apiUrl}`;
     const sql = "/sql/users";
     const cache = "/cache/users";
 
