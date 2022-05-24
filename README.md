@@ -1,4 +1,4 @@
-# NCLOUDS | Docker + Docker Compose
+# nClouds | Docker | Final Project
 
 This project is the final project for Docker class taught by [nClouds Academy](https://www.nclouds.com/).
 
@@ -10,7 +10,7 @@ Tech Stack used in this project:
 - [Docker Compose 2.5.0](https://docs.docker.com/compose/)
 - [Ubuntu](https://ubuntu.com/)
 
-> _Note: `make` commands should be executed from project's root directory_
+> _Note: `make` commands should be executed from project's root directory_ > _Take in consideration that this project is intended to use two layers the backend api and frontend as an independent part in order to manage the server side load and performance_
 
 Links to Docker Hub
 
@@ -20,6 +20,8 @@ Links to Docker Hub
 ## Preview
 
 ![preview](./preview/cover.png)
+
+# Using Docker Compose
 
 ## Clone
 
@@ -103,6 +105,80 @@ Open your browser and enter to [localhost:3000](http://localhost:3000/)
 
 ![Updated items](./preview/update.png)
 
+# Using Docker Images
+
+## Details
+
+The first step you need to know is that you can configure your own database container or existing installation in your local machine, either option you can follow this steps.
+
+## Env file
+
+Create the .env file to pass the environment variables to the docker images.
+
+Remember to update the values with its respective values, if you are running `postgres` and `redis` with docker, please consider using a specific network with the `--network` flag and then use `docker inspect [container-name] | grep IPAddress` and use it as `_HOST`. You also need to configure `user, password and db_name` and additionaly create the **users table** you can [see schema](#configuration) below.
+
+`./.env`
+
+```.env
+# Backend
+## Golang
+PORT=5000
+
+### Postgres
+DB_HOST=172.21.0.3
+DB_PORT=5432
+DB_USER=nclouds_user
+DB_PASSWORD=secret
+DB_NAME=nclouds_db
+DB_DRIVER=pgx
+# required
+DB_SSLMODE=disable
+
+### Redis
+RDB_HOST=172.21.0.2
+RDB_PORT=6379
+RDB_PASSWORD=
+RDB_NAME=0
+
+REACT_APP_API_URL=http://localhost:5000/api/v1
+```
+
+## Pull the images
+
+```sh
+docker pull brxyxn/react-nclouds-app
+docker pull brxyxn/go-nclouds-app
+```
+
+Or use the `Dockerfile.Backend` and `Dockerfile.Frontend` files and build the images locally
+
+`for backend`
+
+```sh
+docker build -t go-nclouds-app:latest -f Dockerfile.Backend
+docker run -p 5000:5000 --name nclouds-backend-api --rm -it --env-file .env --network hw4_backend brxyxn/go-nclouds-app:latest
+```
+
+> Please note the `--network` flag is being used to make sure the container will be able to **communicate** with the `database` and `cache` engines, unless you are using your local installation of `postgres` and `redis` you don't need it.
+
+`for frontend`
+
+```
+docker build -t react-nclouds-app:latest -f Dockerfile.Frontend .
+docker run -p 3000:80 --name nclouds-frontend-web --rm -it --env-file .env brxyxn/react-nclouds-app:latest
+```
+
+_If you cloned the repository you can make it with make._
+
+```sh
+# backend first
+make backend-build
+make backend-run
+# frontend last
+make frontend_build
+make frontend_run
+```
+
 ## Database
 
 ### Configuration
@@ -113,7 +189,6 @@ Make sure the database is created when running `docker-compose up` the first tim
 
 ```sql
 -- CREATE DATABASE nclouds_db;
-/**/;
 CREATE TABLE IF NOT EXISTS users (
     user_id INT NOT NULL GENERATED ALWAYS AS IDENTITY,
     username VARCHAR(50) NOT NULL,

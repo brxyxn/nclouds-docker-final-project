@@ -5,6 +5,7 @@ COPY ./frontend/package.json ./
 COPY ./frontend/package-lock.json ./
 RUN npm i
 COPY ./frontend ./
+ENV REACT_APP_API_URL=http://localhost:5000/api/v1
 RUN npm run build
 
 # ============================
