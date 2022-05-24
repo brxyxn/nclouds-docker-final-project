@@ -15,7 +15,7 @@ func (a *App) cacheRoutes() {
 	a.Router.HandleFunc("/api/v1/cache/users", cacheHandler.GetCounter).Methods("GET")
 }
 
-func (a *App) InitializeCache(bindAddr, password string, dbname int) {
+func (a *App) initializeCache(bindAddr, password string, dbname int) {
 	u.Log.Info("Initializing redis cache...")
 	a.Ctx = context.Background()
 	a.Cache = redis.NewClient(&redis.Options{

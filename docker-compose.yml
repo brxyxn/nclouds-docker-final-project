@@ -5,6 +5,8 @@ services:
     build:
       dockerfile: ./Dockerfile.Backend
     container_name: nclouds-backend
+    ports:
+      - ${PORT}:${PORT}
     environment:
       - PORT=${PORT}
       - ENV=Production
@@ -18,8 +20,6 @@ services:
       - RDB_PORT=${DC_RDB_PORT}
       - RDB_NAME=${DC_RDB_NAME}
       - RDB_PASSWORD=${DC_RDB_PASSWORD}
-    ports:
-      - ${PORT}:${PORT}
     volumes:
       - backend-api:/usr/src/app
     depends_on:
@@ -27,19 +27,18 @@ services:
       - redis
     networks:
       - backend
-      - fullstack
 
-  # frontend:
-  #   image: react-nclouds-app
-  #   build:
-  #     dockerfile: ./Dockerfile.Frontend
-  #   container_name: nclouds-frontend
-  #   ports:
-  #     - 3000:80
-  #   depends_on:
-  #     - api
-  #   networks:
-  #     - fullstack
+  frontend:
+    image: react-nclouds-app
+    build:
+      dockerfile: ./Dockerfile.Frontend
+    container_name: nclouds-frontend
+    environment:
+      - REACT_APP_API_URL=${DC_REACT_API_URL}
+    ports:
+      - 3000:80
+    depends_on:
+      - api
 
   postgres:
     image: postgres:14.2
@@ -50,8 +49,6 @@ services:
       POSTGRES_PASSWORD_FILE: /run/secrets/pg_secret_file
       POSTGRES_DB: ${DC_PG_NAME}
       DATABASE_HOST: ${DC_PG_HOST}
-    ports:
-      - "${DC_PORT_PG}:5432"
     volumes:
       - ./database:/docker-entrypoint-initdb.d
       - database-config:/etc/postgresql
@@ -60,14 +57,11 @@ services:
       - backend
     secrets:
       - pg_secret_file
-    user: postgres
 
   redis:
     image: redis:7.0.0
     container_name: nclouds-redis
     restart: on-failure
-    ports:
-      - "${DC_PORT_RDS}:6379"
     volumes:
       - cache-redis:/data
     depends_on:

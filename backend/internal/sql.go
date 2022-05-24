@@ -20,12 +20,12 @@ To initialize the routes and database connection you must
 include the following information as strings and also
 call Run setting the port to serve to the web.
 */
-func (a *App) InitializePostgresql(host, port, user, password, dbname string) {
+func (a *App) initializePostgresql(host, port, user, password, dbname, sslmode string) {
 	u.Log.Info("Initializing postgres database...")
 	connectionStr := fmt.Sprintf(
 		"host=%s port=%v user=%s "+
-			"password=%s dbname=%s sslmode=require",
-		host, port, user, password, dbname,
+			"password=%s dbname=%s sslmode=%s",
+		host, port, user, password, dbname, sslmode,
 	)
 
 	var err error

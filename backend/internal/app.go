@@ -7,12 +7,14 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"time"
 
 	u "github.com/brxyxn/go_gpr_nclouds/backend/utils"
 	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 )
 
@@ -81,5 +83,72 @@ func (a *App) Run() {
 }
 
 func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:3000/*")
+}
+
+func (a *App) Setup() {
+	var err error
+
+	// Env vars
+	env := os.Getenv("ENV")
+	if env != "Production" {
+		err = godotenv.Load()
+		if err != nil {
+			u.Log.Error("Error loading .env file.", err)
+			return
+		}
+	}
+
+	port := os.Getenv("PORT")
+	a.BindAddr = ":" + port
+
+	// Sql
+	db_host := os.Getenv("DB_HOST")
+	db_port := os.Getenv("DB_PORT")
+	db_user := os.Getenv("DB_USER")
+	db_name := os.Getenv("DB_NAME")
+	db_password := os.Getenv("DB_PASSWORD")
+	db_sslmode := os.Getenv("DB_SSLMODE")
+
+	// Cache
+	cache_host := os.Getenv("RDB_HOST")
+	cache_port := os.Getenv("RDB_PORT")
+	cache_password := os.Getenv("RDB_PASSWORD")
+	cache_name, err := strconv.Atoi(os.Getenv("RDB_NAME"))
+	if err != nil {
+		u.Log.Error("Error converting env RDB_NAME to int.", err)
+	}
+
+	u.Log.Debug("DB Variables:", db_host, db_port, db_user, db_name, db_password)
+	u.Log.Debug("Cache Variables:", cache_host, cache_port, cache_name, cache_password)
+
+	if db_port == "" ||
+		db_host == "" ||
+		db_user == "" ||
+		db_name == "" ||
+		db_password == "" ||
+		a.BindAddr == "" ||
+		cache_host == "" ||
+		cache_port == "" ||
+		cache_name < 0 {
+		u.Log.Error("Environment variables weren't loaded correctly!")
+		return
+	}
+
+	// Sql
+	a.initializePostgresql(
+		db_host,
+		db_port,
+		db_user,
+		db_password,
+		db_name,
+		db_sslmode,
+	)
+
+	// Cache
+	a.initializeCache(
+		cache_host+":"+cache_port,
+		cache_password,
+		cache_name,
+	)
 }
