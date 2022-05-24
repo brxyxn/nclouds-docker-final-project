@@ -24,7 +24,7 @@ func (a *App) InitializePostgresql(host, port, user, password, dbname string) {
 	u.Log.Info("Initializing postgres database...")
 	connectionStr := fmt.Sprintf(
 		"host=%s port=%v user=%s "+
-			"password=%s dbname=%s sslmode=disable",
+			"password=%s dbname=%s sslmode=require",
 		host, port, user, password, dbname,
 	)
 
