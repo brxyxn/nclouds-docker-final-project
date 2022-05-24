@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 You need to [install liquibase](https://docs.liquibase.com/install/home.html) before continuing.
 
-Udpate `username` and `password` values in file `backend/migrations/liquibase.properties` based on `DC_PG_USER` and `pg_secret.txt` values.
+Update `username` and `password` values in file `backend/migrations/liquibase.properties` based on `DC_PG_USER` and `pg_secret.txt` values.
 
 ```properties
 # ...
