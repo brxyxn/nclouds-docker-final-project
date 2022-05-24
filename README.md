@@ -12,10 +12,13 @@ Tech Stack used in this project:
 
 > _Note: `make` commands should be executed from project's root directory_ > _Take in consideration that this project is intended to use two layers the backend api and frontend as an independent part in order to manage the server side load and performance_
 
-Links to Docker Hub
+Links
 
-- [React App](https://hub.docker.com/r/brxyxn/react-nclouds-app)
-- [Golang App](https://hub.docker.com/r/brxyxn/go-nclouds-app)
+- Docker
+  - [React App](https://hub.docker.com/r/brxyxn/react-nclouds-app)
+  - [Golang App](https://hub.docker.com/r/brxyxn/go-nclouds-app)
+- GitHub
+  - [GitHub](https://github.com/brxyxn/nclouds-docker-final-project)
 
 ## Preview
 
